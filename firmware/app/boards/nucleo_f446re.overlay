@@ -1,0 +1,85 @@
+/*
+ * Rover pin map for NUCLEO-F446RE (Morpho / Arduino headers).
+ *
+ *   IMU (I2C1)        PB8 SCL, PB9 SDA            (board default)
+ *   Left motor        PWM TIM3_CH1 PC6, IN1 PB0, IN2 PB1
+ *   Right motor       PWM TIM3_CH2 PC7, IN1 PB12, IN2 PB13
+ *   Left encoder      A PC4, B PC5
+ *   Right encoder     A PC10, B PC11
+ *   Host link         USART1 PB6 TX, PB7 RX       (micro-ROS to the Pi)
+ *   Console / shell   USART2 PA2/PA3              (ST-Link virtual COM)
+ *
+ * Encoder pins use distinct pin numbers (4, 5, 10, 11) so no two share an
+ * EXTI line.
+ */
+#include <zephyr/dt-bindings/pwm/pwm.h>
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+/ {
+	aliases {
+		rover-imu = &imu;
+		rover-motor-left = &motor_left;
+		rover-motor-right = &motor_right;
+		rover-enc-left = &enc_left;
+		rover-enc-right = &enc_right;
+		watchdog0 = &iwdg;
+	};
+
+	motor_left: motor-left {
+		compatible = "rover,dc-motor";
+		pwms = <&pwm3 1 PWM_USEC(50) PWM_POLARITY_NORMAL>; /* 20 kHz */
+		in1-gpios = <&gpiob 0 GPIO_ACTIVE_HIGH>;
+		in2-gpios = <&gpiob 1 GPIO_ACTIVE_HIGH>;
+	};
+
+	motor_right: motor-right {
+		compatible = "rover,dc-motor";
+		pwms = <&pwm3 2 PWM_USEC(50) PWM_POLARITY_NORMAL>;
+		in1-gpios = <&gpiob 12 GPIO_ACTIVE_HIGH>;
+		in2-gpios = <&gpiob 13 GPIO_ACTIVE_HIGH>;
+	};
+
+	/* counts-per-rev = encoder PPR x gear ratio x 4; 11 PPR x 30:1 x 4 = 1320 */
+	enc_left: encoder-left {
+		compatible = "rover,quad-encoder";
+		a-gpios = <&gpioc 4 GPIO_PULL_UP>;
+		b-gpios = <&gpioc 5 GPIO_PULL_UP>;
+		counts-per-rev = <1320>;
+	};
+
+	enc_right: encoder-right {
+		compatible = "rover,quad-encoder";
+		a-gpios = <&gpioc 10 GPIO_PULL_UP>;
+		b-gpios = <&gpioc 11 GPIO_PULL_UP>;
+		counts-per-rev = <1320>;
+		invert; /* motors face opposite directions */
+	};
+};
+
+&timers3 {
+	status = "okay";
+
+	pwm3: pwm {
+		status = "okay";
+		pinctrl-0 = <&tim3_ch1_pc6 &tim3_ch2_pc7>;
+		pinctrl-names = "default";
+	};
+};
+
+&i2c1 {
+	status = "okay";
+	clock-frequency = <I2C_BITRATE_FAST>;
+
+	imu: imu@68 {
+		compatible = "rover,mpu6050";
+		reg = <0x68>;
+		accel-range-g = <4>;
+		gyro-range-dps = <500>;
+		dlpf-cfg = <3>;
+		sample-rate-div = <4>;
+	};
+};
+
+&iwdg {
+	status = "okay";
+};
