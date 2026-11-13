@@ -1,0 +1,16 @@
+# west workspace (fetched by `west update`)
+/zephyr/
+/modules/
+/bootloader/
+/tools/
+/.west/
+build/
+twister-out*/
+__pycache__/
+*.pyc
+# ROS 2
+/ros2_ws/build/
+/ros2_ws/install/
+/ros2_ws/log/
+# signing keys must never be committed
+*.pem
