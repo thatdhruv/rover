@@ -7,48 +7,49 @@ on:
   pull_request:
     paths: ["firmware/**", ".github/workflows/firmware.yml"]
 
+# The full Zephyr CI container is too large for a hosted runner, so install
+# only what is needed.
 jobs:
   unit-tests:
     name: ztest (native_sim)
-    runs-on: ubuntu-latest
-    container: ghcr.io/zephyrproject-rtos/ci:latest
-    env:
-      ZEPHYR_SDK_INSTALL_DIR: /opt/toolchains
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: West init/update
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          west init -l firmware
-          west update --narrow -o=--depth=1
-          pip install -r zephyr/scripts/requirements-base.txt
+        with:
+          path: rover
+      - uses: zephyrproject-rtos/action-zephyr-setup@v1
+        with:
+          app-path: rover/firmware
+          toolchains: ""
+          sdk-version: 1.0.1
+      - name: Host build deps
+        run: sudo apt-get update && sudo apt-get install -y gcc-multilib
       - name: Twister
+        working-directory: rover
         run: |
-          zephyr/scripts/twister -T firmware/tests -p native_sim \
-            --inline-logs -O twister-out
+          west twister -T firmware/tests -p native_sim --inline-logs -O twister-out
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: twister-report
-          path: twister-out/twister.xml
+          path: rover/twister-out/twister.xml
 
   build:
     name: build (nucleo_f446re)
-    runs-on: ubuntu-latest
-    container: ghcr.io/zephyrproject-rtos/ci:latest
-    env:
-      ZEPHYR_SDK_INSTALL_DIR: /opt/toolchains
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: West init/update
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          west init -l firmware
-          west update --narrow -o=--depth=1
-          pip install -r zephyr/scripts/requirements-base.txt
+        with:
+          path: rover
+      - uses: zephyrproject-rtos/action-zephyr-setup@v1
+        with:
+          app-path: rover/firmware
+          toolchains: arm-zephyr-eabi
+          sdk-version: 1.0.1
       - name: Build
+        working-directory: rover
         run: west build -b nucleo_f446re firmware/app
       - uses: actions/upload-artifact@v4
         with:
           name: rover-nucleo_f446re
-          path: build/zephyr/zephyr.elf
+          path: rover/build/zephyr/zephyr.elf
