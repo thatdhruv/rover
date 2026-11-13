@@ -1,0 +1,5 @@
+tests:
+  rover.lib.control:
+    platform_allow:
+      - native_sim
+    tags: rover control

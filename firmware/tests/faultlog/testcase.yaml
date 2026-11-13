@@ -1,0 +1,5 @@
+tests:
+  rover.lib.faultlog:
+    platform_allow:
+      - native_sim
+    tags: rover faultlog
