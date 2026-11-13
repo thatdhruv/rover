@@ -1,0 +1,24 @@
+description: Quadrature encoder read with GPIO edge interrupts on both channels
+
+compatible: "rover,quad-encoder"
+
+include: base.yaml
+
+properties:
+  a-gpios:
+    type: phandle-array
+    required: true
+    description: Channel A input.
+  b-gpios:
+    type: phandle-array
+    required: true
+    description: Channel B input.
+  counts-per-rev:
+    type: int
+    required: true
+    description: |
+      Edge counts per output-shaft revolution with 4x decoding
+      (= encoder PPR x gearbox ratio x 4).
+  invert:
+    type: boolean
+    description: Negate the count so forward wheel motion counts up.

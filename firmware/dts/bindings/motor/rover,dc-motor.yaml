@@ -1,0 +1,21 @@
+description: Brushed DC motor behind an H-bridge (PWM enable + two direction pins)
+
+compatible: "rover,dc-motor"
+
+include: base.yaml
+
+properties:
+  pwms:
+    type: phandle-array
+    required: true
+    description: PWM channel driving the bridge enable input.
+  in1-gpios:
+    type: phandle-array
+    required: true
+  in2-gpios:
+    type: phandle-array
+    required: true
+  deadband-permille:
+    type: int
+    default: 20
+    description: Duty magnitudes below this (1/1000) are treated as zero.
