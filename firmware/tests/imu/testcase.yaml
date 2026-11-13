@@ -1,0 +1,5 @@
+tests:
+  rover.drivers.imu:
+    platform_allow:
+      - native_sim
+    tags: rover imu

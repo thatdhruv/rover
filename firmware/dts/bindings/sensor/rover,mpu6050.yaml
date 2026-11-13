@@ -1,0 +1,39 @@
+description: MPU-6050 compatible 6-axis IMU, handled by the hand-written rover driver
+
+compatible: "rover,mpu6050"
+
+include: [sensor-device.yaml, i2c-device.yaml]
+
+properties:
+  accel-range-g:
+    type: int
+    default: 2
+    enum: [2, 4, 8, 16]
+    description: Accelerometer full-scale range in g.
+
+  gyro-range-dps:
+    type: int
+    default: 250
+    enum: [250, 500, 1000, 2000]
+    description: Gyroscope full-scale range in degrees per second.
+
+  dlpf-cfg:
+    type: int
+    default: 3
+    enum: [0, 1, 2, 3, 4, 5, 6]
+    description: |
+      Digital low-pass filter setting (CONFIG register DLPF_CFG).
+      0 = 260 Hz gyro bandwidth (8 kHz gyro output rate), 3 = 44 Hz, 6 = 5 Hz.
+      Settings 1..6 use a 1 kHz gyro output rate.
+
+  sample-rate-div:
+    type: int
+    default: 4
+    description: |
+      SMPLRT_DIV register value. Sample rate = gyro output rate / (1 + div).
+      The default of 4 with DLPF enabled gives 200 Hz.
+
+  who-am-i:
+    type: int
+    default: 0x68
+    description: Expected WHO_AM_I register value, checked at init.

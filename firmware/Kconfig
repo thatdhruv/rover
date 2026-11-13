@@ -1,0 +1,34 @@
+menu "Rover firmware"
+
+config ROVER_MPU6050
+	bool "Rover MPU-6050 IMU driver"
+	default y
+	depends on DT_HAS_ROVER_MPU6050_ENABLED
+	select I2C
+	select SENSOR
+	help
+	  Hand-written I2C driver for MPU-6050 compatible 6-axis IMUs,
+	  configured entirely through the device tree.
+
+config ROVER_MPU6050_EMUL
+	bool "Rover MPU-6050 I2C emulator"
+	default y
+	depends on ROVER_MPU6050 && EMUL
+	help
+	  Register-level emulator used by unit tests on native_sim.
+
+
+config ROVER_ENCODER
+	bool "Rover GPIO quadrature encoder driver"
+	default y
+	depends on DT_HAS_ROVER_QUAD_ENCODER_ENABLED
+	select GPIO
+
+config ROVER_MOTOR
+	bool "Rover H-bridge DC motor driver"
+	default y
+	depends on DT_HAS_ROVER_DC_MOTOR_ENABLED
+	select GPIO
+	select PWM
+
+endmenu

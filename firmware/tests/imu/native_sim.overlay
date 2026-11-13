@@ -1,0 +1,12 @@
+&i2c0 {
+	status = "okay";
+
+	imu: imu@68 {
+		compatible = "rover,mpu6050";
+		reg = <0x68>;
+		accel-range-g = <4>;
+		gyro-range-dps = <500>;
+		dlpf-cfg = <3>;
+		sample-rate-div = <4>;
+	};
+};
