@@ -29,6 +29,9 @@ int main(void)
 			k_msleep(100);
 		}
 	}
+	if (IS_ENABLED(CONFIG_ROVER_MICROROS)) {
+		microros_start();
+	}
 	LOG_INF("rover firmware running");
 
 	if (IS_ENABLED(CONFIG_ROVER_TEST_BAD_IMAGE)) {

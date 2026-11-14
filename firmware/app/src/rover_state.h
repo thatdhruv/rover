@@ -41,6 +41,8 @@ void rover_jitter_get(struct rover_jitter *out);
 int control_start(void);
 int imu_task_start(void);
 int safety_start(void);
+/* Only built with CONFIG_ROVER_MICROROS (see app/microros.conf). */
+int microros_start(void);
 
 /* Used by the tasks to report liveness to the watchdog supervisor. */
 enum task_id {

@@ -1,5 +1,9 @@
 manifest:
+  # micro-ROS is opt-in: `west config manifest.group-filter -- +microros && west update`
+  group-filter: [-microros]
   remotes:
+    - name: micro-ros
+      url-base: https://github.com/micro-ROS
     - name: zephyrproject-rtos
       url-base: https://github.com/zephyrproject-rtos
   projects:
@@ -15,5 +19,10 @@ manifest:
           - picolibc
           - zephyr-lang-rust
           - zcbor
+    - name: micro_ros_zephyr_module
+      remote: micro-ros
+      revision: rolling
+      path: modules/lib/micro_ros_zephyr_module
+      groups: [microros]
   self:
     path: firmware

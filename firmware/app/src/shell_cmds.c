@@ -38,6 +38,8 @@ static int cmd_state(const struct shell *sh, size_t argc, char **argv)
 			    s.wheel_count[i]);
 	}
 	shell_print(sh, "heading=%.3f rad gyro_z=%.3f rad/s", (double)s.heading, (double)s.gyro_z);
+	shell_print(sh, "accel=%.2f %.2f %.2f m/s2", (double)s.accel[0], (double)s.accel[1],
+		    (double)s.accel[2]);
 	return 0;
 }
 

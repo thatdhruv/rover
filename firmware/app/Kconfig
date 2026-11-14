@@ -9,6 +9,12 @@ config ROVER_CONFIRM_AFTER_MS
 	  image back. The supervisor confirms only after this much continuous
 	  healthy operation.
 
+config ROVER_MICROROS
+	bool "micro-ROS link to the Raspberry Pi"
+	help
+	  Needs the optional micro_ros_zephyr_module (west group "microros") and
+	  the overlay app/microros.conf. See docs/microros.md.
+
 config ROVER_TEST_BAD_IMAGE
 	bool "Fault injection: hang one second after boot"
 	help
