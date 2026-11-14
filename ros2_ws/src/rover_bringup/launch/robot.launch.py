@@ -55,12 +55,14 @@ def generate_launch_description():
     jsb = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager",
+               "--param-file", controllers],
     )
     diff = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["diff_drive_controller", "--controller-manager", "/controller_manager"],
+        arguments=["diff_drive_controller", "--controller-manager", "/controller_manager",
+               "--param-file", controllers],
     )
     # diff drive after joint states are up, so odometry starts from a valid state
     diff_after_jsb = RegisterEventHandler(OnProcessExit(target_action=jsb, on_exit=[diff]))

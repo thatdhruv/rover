@@ -16,6 +16,15 @@ namespace
 {
 const char kUrdf[] = R"(
 <robot name="rover">
+  <link name="base_link"/>
+  <link name="left_wheel"/>
+  <link name="right_wheel"/>
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/><child link="left_wheel"/><axis xyz="0 1 0"/>
+  </joint>
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/><child link="right_wheel"/><axis xyz="0 1 0"/>
+  </joint>
   <ros2_control name="rover_system" type="system">
     <hardware>
       <plugin>rover_hardware/RoverSystem</plugin>

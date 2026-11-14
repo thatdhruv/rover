@@ -13,8 +13,9 @@ target_include_directories(rover_hardware PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 target_compile_features(rover_hardware PUBLIC cxx_std_17)
-ament_target_dependencies(rover_hardware
-  hardware_interface pluginlib rclcpp rclcpp_lifecycle rover_msgs)
+target_link_libraries(rover_hardware PUBLIC
+  hardware_interface::hardware_interface pluginlib::pluginlib rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle ${rover_msgs_TARGETS})
 
 pluginlib_export_plugin_description_file(hardware_interface rover_hardware.xml)
 
@@ -26,7 +27,7 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(test_rover_system test/test_rover_system.cpp)
   target_link_libraries(test_rover_system rover_hardware)
-  ament_target_dependencies(test_rover_system hardware_interface rclcpp rover_msgs)
+  target_link_libraries(test_rover_system hardware_interface::hardware_interface rclcpp::rclcpp ${rover_msgs_TARGETS})
 endif()
 
 ament_export_include_directories(include)
