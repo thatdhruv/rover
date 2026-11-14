@@ -14,7 +14,7 @@ for _ in $(seq 150); do
 done
 grep -q "Configured and activated diff_drive_controller" "$log" || { echo "FAIL: controllers did not start"; tail -30 "$log"; exit 1; }
 
-ros2 topic pub -r 10 -t 60 /diff_drive_controller/cmd_vel geometry_msgs/msg/TwistStamped \
+ros2 topic pub -r 10 -t 60 /cmd_vel geometry_msgs/msg/TwistStamped \
   "{twist: {linear: {x: 0.3}}}" >/dev/null 2>&1
 
 x=$(timeout 15 ros2 topic echo --once --field pose.pose.position.x /odometry/filtered 2>/dev/null | head -1)

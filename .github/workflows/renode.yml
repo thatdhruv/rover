@@ -1,0 +1,43 @@
+name: renode
+
+on:
+  push:
+    branches: [main]
+    paths: ["firmware/**", "tools/renode/**", ".github/workflows/renode.yml"]
+  pull_request:
+    paths: ["firmware/**", "tools/renode/**", ".github/workflows/renode.yml"]
+
+# Boots the real MCUboot + signed application image under Renode and checks the boot path and the
+# automatic rollback of a bad update.
+jobs:
+  boot-and-rollback:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: zephyrproject-rtos/action-zephyr-setup@v1
+        with:
+          app-path: firmware
+          toolchains: arm-zephyr-eabi
+          sdk-version: 1.0.1
+      - name: Build good image (bootloader + app)
+        run: west build --sysbuild -b nucleo_f429zi firmware/app -d build/good
+      - name: Build bad image (hangs before it can be confirmed)
+        run: |
+          west build --sysbuild -b nucleo_f429zi firmware/app -d build/bad -- \
+            -Dapp_CONFIG_ROVER_TEST_BAD_IMAGE=y
+      - name: Stage the bad image in slot 1 as a test update
+        run: |
+          pip install imgtool
+          bash tools/renode/make_update_hex.sh build/bad/app/zephyr/zephyr.bin build/bad_update.hex
+      - name: Run Renode tests
+        run: |
+          docker run --rm -v "$PWD:/work" -w /work/tools/renode \
+            antmicro/renode:latest renode-test boot.robot
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: renode-logs
+          path: |
+            tools/renode/logs
+            tools/renode/report.html
+            tools/renode/log.html

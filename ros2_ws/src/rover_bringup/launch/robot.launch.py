@@ -62,7 +62,9 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner",
         arguments=["diff_drive_controller", "--controller-manager", "/controller_manager",
-               "--param-file", controllers],
+                   "--param-file", controllers,
+                   # Nav2 publishes /cmd_vel; the controller listens on its own namespace
+                   "--controller-ros-args", "-r /diff_drive_controller/cmd_vel:=/cmd_vel"],
     )
     # diff drive after joint states are up, so odometry starts from a valid state
     diff_after_jsb = RegisterEventHandler(OnProcessExit(target_action=jsb, on_exit=[diff]))

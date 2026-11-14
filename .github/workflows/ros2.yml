@@ -59,3 +59,30 @@ jobs:
           source /opt/ros/lyrical/setup.bash
           source install/setup.bash
           scripts/sim_smoke.sh
+
+  nav-smoke:
+    name: SLAM + Nav2 goal in simulation
+    runs-on: ubuntu-24.04
+    container: ros:lyrical
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          apt-get update
+          rosdep update
+          rosdep install --from-paths ros2_ws/src --ignore-src -y
+      - name: Build
+        working-directory: ros2_ws
+        shell: bash
+        run: |
+          source /opt/ros/lyrical/setup.bash
+          colcon build
+      - name: Navigate to a goal
+        working-directory: ros2_ws
+        shell: bash
+        timeout-minutes: 12
+        run: |
+          source /opt/ros/lyrical/setup.bash
+          source install/setup.bash
+          scripts/nav_smoke.sh
