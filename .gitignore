@@ -2,7 +2,6 @@
 /zephyr/
 /modules/
 /bootloader/
-/tools/
 /.west/
 build/
 twister-out*/
@@ -14,3 +13,4 @@ __pycache__/
 /ros2_ws/log/
 # signing keys must never be committed
 *.pem
+.pytest_cache/
