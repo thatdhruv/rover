@@ -1,0 +1,7 @@
+<library path="rover_hardware">
+  <class name="rover_hardware/RoverSystem"
+         type="rover_hardware::RoverSystem"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>Rover differential-drive system over micro-ROS topics.</description>
+  </class>
+</library>
