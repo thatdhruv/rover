@@ -42,8 +42,17 @@ The build needs the host tools libmicroros uses (colcon, catkin_pkg, lark, empy,
 
 ## Pi side
 
+The agent has no rosdep key or Lyrical binary package. Either build it from source with
+[micro_ros_setup](https://github.com/micro-ROS/micro_ros_setup) (it has a `lyrical` branch), or run the
+upstream image (only `rolling` is published; the protocol is the same XRCE-DDS):
+
 ```sh
+# agent in Docker, launch without it
+docker run --rm -it --device /dev/ttyAMA0 --net host microros/micro-ros-agent:rolling     serial --dev /dev/ttyAMA0 -b 921600
+ros2 launch rover_bringup robot.launch.py start_agent:=false
+
+# or, with a source-built agent on the Pi, let the launch file start it
 ros2 launch rover_bringup robot.launch.py serial_dev:=/dev/ttyAMA0
 ```
 
-starts the agent, `ros2_control` with `rover_hardware`, the controllers, and the EKF.
+The launch file starts `ros2_control` with `rover_hardware`, the controllers, and the EKF.

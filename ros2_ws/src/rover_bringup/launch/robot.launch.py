@@ -8,7 +8,9 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, RegisterEventHandler
 from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
-from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import (
+    Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution, PythonExpression,
+)
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
@@ -17,6 +19,7 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
     sim = LaunchConfiguration("sim")
     serial_dev = LaunchConfiguration("serial_dev")
+    start_agent = LaunchConfiguration("start_agent")
     controllers = PathJoinSubstitution([FindPackageShare("rover_bringup"), "config", "controllers.yaml"])
     ekf_cfg = PathJoinSubstitution([FindPackageShare("rover_bringup"), "config", "ekf.yaml"])
     xacro_file = PathJoinSubstitution([FindPackageShare("rover_description"), "urdf", "rover.urdf.xacro"])
@@ -49,7 +52,7 @@ def generate_launch_description():
         executable="micro_ros_agent",
         arguments=["serial", "--dev", serial_dev, "-b", "921600"],
         output="screen",
-        condition=UnlessCondition(sim),
+        condition=IfCondition(PythonExpression(["'", sim, "' == 'false' and '", start_agent, "' == 'true'"])),
     )
 
     jsb = Node(
@@ -89,5 +92,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument("sim", default_value="false"),
         DeclareLaunchArgument("serial_dev", default_value="/dev/ttyAMA0"),
+        # false if the micro-ROS agent runs elsewhere (e.g. in Docker)
+        DeclareLaunchArgument("start_agent", default_value="true"),
         rsp, control_node, micro_ros_agent, jsb, diff_after_jsb, ekf, ekf_sim,
     ])
