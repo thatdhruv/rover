@@ -1,12 +1,11 @@
 # NUCLEO-F429ZI under Renode: MCUboot + signed rover app.
-#   renode rover.resc                (with $merged set to the sysbuild merged.hex)
+# Set before including:  $mcuboot=@.../mcuboot/zephyr/zephyr.hex  $app=@.../app/zephyr/zephyr.signed.hex
 using sysbus
 $name?="rover"
 mach create $name
 
 machine LoadPlatformDescription @platforms/cpus/stm32f429.repl
-# MPU-6050 on I2C1 at 0x68, same address as the device tree
-machine LoadPlatformDescriptionFromString "imu: Sensors.MPU6050 @ i2c1 0x68"
 
-sysbus LoadHEX $merged
+sysbus LoadHEX $mcuboot
+sysbus LoadHEX $app
 showAnalyzer sysbus.usart3

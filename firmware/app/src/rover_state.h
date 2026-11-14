@@ -51,6 +51,10 @@ enum task_id {
 	TASK_COUNT
 };
 void safety_task_alive(enum task_id id);
+/* Mark a task as absent by design (e.g. no IMU fitted): the watchdog stops expecting it. */
+void safety_task_optional(enum task_id id);
+/* Tell the control loop whether an IMU provides heading; if not it uses wheel odometry. */
+void state_set_imu_present(bool present);
 
 /* Record a fault in the flash log (no-op if the log is unavailable). */
 void safety_log_fault(uint16_t code, uint32_t arg0, uint32_t arg1);

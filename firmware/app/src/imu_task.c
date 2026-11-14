@@ -68,9 +68,12 @@ static struct k_thread imu_thread;
 int imu_task_start(void)
 {
 	if (!device_is_ready(imu)) {
-		LOG_ERR("IMU not ready");
+		/* Degraded mode: wheel odometry still gives heading and the rover can drive. */
+		LOG_WRN("IMU not ready; continuing without it");
 		safety_log_fault(ROVER_FAULT_IMU, ENODEV, 0);
-		return -ENODEV;
+		safety_task_optional(TASK_IMU);
+		state_set_imu_present(false);
+		return 0;
 	}
 	k_thread_create(&imu_thread, imu_stack, K_THREAD_STACK_SIZEOF(imu_stack), imu_fn, NULL,
 			NULL, NULL, K_PRIO_PREEMPT(5), 0, K_NO_WAIT);

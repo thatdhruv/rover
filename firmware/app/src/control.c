@@ -56,6 +56,13 @@ static struct {
 	float odom_heading;
 } ctl;
 
+static bool imu_present = true;
+
+void state_set_imu_present(bool present)
+{
+	imu_present = present;
+}
+
 K_SEM_DEFINE(tick_sem, 0, 1);
 static struct k_timer tick_timer;
 
@@ -232,6 +239,9 @@ static void control_fn(void *a, void *b, void *c)
 			ctl.state.wheel_cmd[i] = cmd[i];
 			ctl.state.wheel_duty[i] = duty[i];
 			ctl.state.wheel_count[i] = counts[i];
+		}
+		if (!imu_present) {
+			ctl.state.heading = odom_heading;
 		}
 		ctl.state.link_alive = alive;
 		ctl.state.motors_cut_off = cutoff;

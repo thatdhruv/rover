@@ -45,6 +45,7 @@ static const struct device *const motors[] = {
 
 K_MSGQ_DEFINE(fault_q, sizeof(struct fault_msg), FAULT_Q_DEPTH, 4);
 static atomic_t alive_bits;
+static atomic_t optional_bits; /* tasks that are absent by design */
 static int64_t last_seen_ms[TASK_COUNT];
 static struct rover_faultlog flog;
 static bool flog_ok;
@@ -53,6 +54,11 @@ static int wdt_channel = -1;
 void safety_task_alive(enum task_id id)
 {
 	atomic_or(&alive_bits, BIT(id));
+}
+
+void safety_task_optional(enum task_id id)
+{
+	atomic_or(&optional_bits, BIT(id));
 }
 
 /* Queued so a slow flash write never blocks the 1 kHz loop. */
@@ -133,7 +139,7 @@ static void supervisor_fn(void *a, void *b, void *c)
 		k_msleep(SUPERVISOR_MS);
 		drain_faults();
 
-		const atomic_val_t seen = atomic_clear(&alive_bits);
+		const atomic_val_t seen = atomic_clear(&alive_bits) | atomic_get(&optional_bits);
 		const int64_t now = k_uptime_get();
 		bool healthy = true;
 
