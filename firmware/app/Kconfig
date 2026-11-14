@@ -1,0 +1,19 @@
+mainmenu "Rover firmware"
+
+config ROVER_CONFIRM_AFTER_MS
+	int "Healthy run time before the new image is confirmed (ms)"
+	default 3000
+	help
+	  MCUboot boots a freshly uploaded image in test mode. If it resets
+	  before being confirmed (crash, watchdog), MCUboot swaps the previous
+	  image back. The supervisor confirms only after this much continuous
+	  healthy operation.
+
+config ROVER_TEST_BAD_IMAGE
+	bool "Fault injection: hang one second after boot"
+	help
+	  Builds an intentionally broken image for exercising the rollback
+	  path. The watchdog resets the chip before the image is confirmed, so
+	  MCUboot must revert to the previous slot. Never enable in production.
+
+source "Kconfig.zephyr"

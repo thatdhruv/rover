@@ -13,6 +13,9 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/shell/shell.h>
 #include <zephyr/storage/flash_map.h>
+#ifdef CONFIG_BOOTLOADER_MCUBOOT
+#include <zephyr/dfu/mcuboot.h>
+#endif
 
 #include <rover/faultlog.h>
 #include <rover/motor.h>
@@ -118,6 +121,9 @@ static void supervisor_fn(void *a, void *b, void *c)
 	ARG_UNUSED(c);
 
 	bool stalled_logged = false;
+	int64_t healthy_since = k_uptime_get();
+	bool confirmed = false;
+	ARG_UNUSED(confirmed);
 
 	for (int i = 0; i < TASK_COUNT; i++) {
 		last_seen_ms[i] = k_uptime_get();
@@ -150,7 +156,21 @@ static void supervisor_fn(void *a, void *b, void *c)
 
 		if (healthy) {
 			wdt_feed(wdt, wdt_channel);
+		} else {
+			healthy_since = now;
 		}
+
+#ifdef CONFIG_BOOTLOADER_MCUBOOT
+		/* Confirm the running image only after a stretch of proven health;
+		 * until then a reset makes MCUboot roll back to the previous image.
+		 */
+		if (!confirmed && now - healthy_since >= CONFIG_ROVER_CONFIRM_AFTER_MS) {
+			confirmed = true;
+			if (!boot_is_img_confirmed() && boot_write_img_confirmed() == 0) {
+				LOG_INF("image confirmed");
+			}
+		}
+#endif
 		/* unhealthy: stop feeding, the IWDG resets the chip within WDT_TIMEOUT_MS */
 	}
 }

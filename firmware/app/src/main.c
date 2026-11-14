@@ -16,6 +16,7 @@ static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios);
 
 int main(void)
 {
+	LOG_INF("rover firmware starting");
 	if (gpio_is_ready_dt(&led)) {
 		gpio_pin_configure_dt(&led, GPIO_OUTPUT_INACTIVE);
 	}
@@ -29,6 +30,14 @@ int main(void)
 		}
 	}
 	LOG_INF("rover firmware running");
+
+	if (IS_ENABLED(CONFIG_ROVER_TEST_BAD_IMAGE)) {
+		k_msleep(1000);
+		LOG_ERR("test: simulating a hung image");
+		(void)irq_lock();
+		for (;;) {
+		}
+	}
 
 	for (;;) {
 		gpio_pin_toggle_dt(&led);

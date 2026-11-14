@@ -1,16 +1,19 @@
 /*
- * Rover pin map for NUCLEO-F446RE (Morpho / Arduino headers).
+ * Rover pin map for NUCLEO-F429ZI.
  *
  *   IMU (I2C1)        PB8 SCL, PB9 SDA            (board default)
- *   Left motor        PWM TIM3_CH1 PC6, IN1 PB0, IN2 PB1
- *   Right motor       PWM TIM3_CH2 PC7, IN1 PB12, IN2 PB13
- *   Left encoder      A PC4, B PC5
- *   Right encoder     A PC10, B PC11
- *   Host link         USART1 PB6 TX, PB7 RX       (micro-ROS to the Pi)
- *   Console / shell   USART2 PA2/PA3              (ST-Link virtual COM)
+ *   Left motor        PWM TIM3_CH1 PC6, IN1 PF12, IN2 PF13
+ *   Right motor       PWM TIM3_CH2 PC7, IN1 PF14, IN2 PF15
+ *   Left encoder      A PE2, B PE3
+ *   Right encoder     A PE4, B PE5
+ *   Host link         USART6 PG14 TX, PG9 RX      (micro-ROS to the Pi)
+ *   Console / shell   USART3 PD8/PD9              (ST-Link virtual COM)
  *
- * Encoder pins use distinct pin numbers (4, 5, 10, 11) so no two share an
- * EXTI line.
+ * Encoder pins use distinct pin numbers (2..5) so no two share an EXTI line.
+ *
+ * Flash (2 MB): MCUboot 32K | storage 64K (fault log) | slot0 256K |
+ * slot1 256K | scratch 128K, as defined by the board plus the storage
+ * partition added below.
  */
 #include <zephyr/dt-bindings/pwm/pwm.h>
 #include <zephyr/dt-bindings/gpio/gpio.h>
@@ -22,35 +25,36 @@
 		rover-motor-right = &motor_right;
 		rover-enc-left = &enc_left;
 		rover-enc-right = &enc_right;
+		rover-link-uart = &usart6;
 		watchdog0 = &iwdg;
 	};
 
 	motor_left: motor-left {
 		compatible = "rover,dc-motor";
 		pwms = <&pwm3 1 PWM_USEC(50) PWM_POLARITY_NORMAL>; /* 20 kHz */
-		in1-gpios = <&gpiob 0 GPIO_ACTIVE_HIGH>;
-		in2-gpios = <&gpiob 1 GPIO_ACTIVE_HIGH>;
+		in1-gpios = <&gpiof 12 GPIO_ACTIVE_HIGH>;
+		in2-gpios = <&gpiof 13 GPIO_ACTIVE_HIGH>;
 	};
 
 	motor_right: motor-right {
 		compatible = "rover,dc-motor";
 		pwms = <&pwm3 2 PWM_USEC(50) PWM_POLARITY_NORMAL>;
-		in1-gpios = <&gpiob 12 GPIO_ACTIVE_HIGH>;
-		in2-gpios = <&gpiob 13 GPIO_ACTIVE_HIGH>;
+		in1-gpios = <&gpiof 14 GPIO_ACTIVE_HIGH>;
+		in2-gpios = <&gpiof 15 GPIO_ACTIVE_HIGH>;
 	};
 
 	/* counts-per-rev = encoder PPR x gear ratio x 4; 11 PPR x 30:1 x 4 = 1320 */
 	enc_left: encoder-left {
 		compatible = "rover,quad-encoder";
-		a-gpios = <&gpioc 4 GPIO_PULL_UP>;
-		b-gpios = <&gpioc 5 GPIO_PULL_UP>;
+		a-gpios = <&gpioe 2 GPIO_PULL_UP>;
+		b-gpios = <&gpioe 3 GPIO_PULL_UP>;
 		counts-per-rev = <1320>;
 	};
 
 	enc_right: encoder-right {
 		compatible = "rover,quad-encoder";
-		a-gpios = <&gpioc 10 GPIO_PULL_UP>;
-		b-gpios = <&gpioc 11 GPIO_PULL_UP>;
+		a-gpios = <&gpioe 4 GPIO_PULL_UP>;
+		b-gpios = <&gpioe 5 GPIO_PULL_UP>;
 		counts-per-rev = <1320>;
 		invert; /* motors face opposite directions */
 	};
@@ -80,6 +84,21 @@
 	};
 };
 
+&usart6 {
+	status = "okay";
+	current-speed = <921600>;
+};
+
 &iwdg {
 	status = "okay";
+};
+
+&flash0 {
+	partitions {
+		/* sector 4 (64K): fault log. Single sector, erased only on wrap. */
+		storage_partition: partition@10000 {
+			label = "storage";
+			reg = <0x00010000 DT_SIZE_K(64)>;
+		};
+	};
 };
