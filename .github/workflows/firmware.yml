@@ -43,7 +43,7 @@ jobs:
       - name: Build fault-injected app (hangs, never confirms)
         run: |
           west build --sysbuild -b nucleo_f429zi firmware/app -d build/bad -- \
-            -DCONFIG_ROVER_TEST_BAD_IMAGE=y -DSB_CONFIG_BOOTLOADER_MCUBOOT=y
+            -Dapp_CONFIG_ROVER_TEST_BAD_IMAGE=y
       - name: Verify the signature of the produced image
         run: |
           pip install imgtool

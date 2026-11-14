@@ -32,3 +32,30 @@ jobs:
           source /opt/ros/lyrical/setup.bash
           colcon test --event-handlers console_direct+
           colcon test-result --verbose
+
+  sim-smoke:
+    name: Gazebo headless drive test
+    runs-on: ubuntu-24.04
+    container: ros:lyrical
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          apt-get update
+          rosdep update
+          rosdep install --from-paths ros2_ws/src --ignore-src -y
+      - name: Build
+        working-directory: ros2_ws
+        shell: bash
+        run: |
+          source /opt/ros/lyrical/setup.bash
+          colcon build
+      - name: Drive the simulated rover
+        working-directory: ros2_ws
+        shell: bash
+        timeout-minutes: 10
+        run: |
+          source /opt/ros/lyrical/setup.bash
+          source install/setup.bash
+          scripts/sim_smoke.sh
