@@ -3,9 +3,9 @@ name: firmware
 on:
   push:
     branches: [main]
-    paths: ["firmware/**", ".github/workflows/firmware.yml"]
+    paths: ["firmware/**", "tools/renode/**", ".github/workflows/firmware.yml"]
   pull_request:
-    paths: ["firmware/**", ".github/workflows/firmware.yml"]
+    paths: ["firmware/**", "tools/renode/**", ".github/workflows/firmware.yml"]
 
 # The full Zephyr CI container is too large for a hosted runner, so install
 # only what is needed.
@@ -29,7 +29,7 @@ jobs:
           path: twister-out/twister.xml
 
   build:
-    name: build (nucleo_f446re)
+    name: build (nucleo_f429zi, MCUboot, signed)
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -38,9 +38,20 @@ jobs:
           app-path: firmware
           toolchains: arm-zephyr-eabi
           sdk-version: 1.0.1
-      - name: Build
-        run: west build -b nucleo_f446re firmware/app
+      - name: Build bootloader + app (sysbuild)
+        run: west build --sysbuild -b nucleo_f429zi firmware/app -d build/good
+      - name: Build fault-injected app (hangs, never confirms)
+        run: |
+          west build --sysbuild -b nucleo_f429zi firmware/app -d build/bad -- \
+            -DCONFIG_ROVER_TEST_BAD_IMAGE=y -DSB_CONFIG_BOOTLOADER_MCUBOOT=y
+      - name: Verify the signature of the produced image
+        run: |
+          pip install imgtool
+          imgtool verify -k bootloader/mcuboot/root-ec-p256.pem build/good/app/zephyr/zephyr.signed.bin
       - uses: actions/upload-artifact@v4
         with:
-          name: rover-nucleo_f446re
-          path: build/zephyr/zephyr.elf
+          name: firmware-nucleo_f429zi
+          path: |
+            build/good/merged.hex
+            build/good/app/zephyr/zephyr.signed.bin
+            build/bad/app/zephyr/zephyr.signed.bin

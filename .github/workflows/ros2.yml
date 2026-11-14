@@ -1,0 +1,34 @@
+name: ros2
+
+on:
+  push:
+    branches: [main]
+    paths: ["ros2_ws/**", ".github/workflows/ros2.yml"]
+  pull_request:
+    paths: ["ros2_ws/**", ".github/workflows/ros2.yml"]
+
+jobs:
+  build-test:
+    name: colcon build + test (ROS 2 Lyrical)
+    runs-on: ubuntu-24.04
+    container: ros:lyrical
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          apt-get update
+          rosdep update
+          rosdep install --from-paths ros2_ws/src --ignore-src -y
+      - name: Build
+        working-directory: ros2_ws
+        shell: bash
+        run: |
+          source /opt/ros/lyrical/setup.bash
+          colcon build --event-handlers console_direct+
+      - name: Test
+        working-directory: ros2_ws
+        shell: bash
+        run: |
+          source /opt/ros/lyrical/setup.bash
+          colcon test --event-handlers console_direct+
+          colcon test-result --verbose

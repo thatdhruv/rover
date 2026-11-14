@@ -1,0 +1,21 @@
+name: hil-tools
+
+on:
+  push:
+    branches: [main]
+    paths: ["tools/hil/**", ".github/workflows/hil-tools.yml"]
+  pull_request:
+    paths: ["tools/hil/**", ".github/workflows/hil-tools.yml"]
+
+# The hardware-in-the-loop script itself needs a real board and runs on the Pi.
+# Here we only test the script's logic against a fake board.
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r tools/hil/requirements.txt
+      - run: python -m pytest -q tools/hil/test_hil.py
