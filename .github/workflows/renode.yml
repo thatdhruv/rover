@@ -31,7 +31,7 @@ jobs:
           bash tools/renode/make_update_hex.sh build/bad/app/zephyr/zephyr.bin build/bad_update.hex
       - name: Run Renode tests
         run: |
-          docker run --rm -v "$PWD:/work" -w /work/tools/renode \
+          docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD:/work" -w /work/tools/renode \
             antmicro/renode:latest renode-test boot.robot
       - uses: actions/upload-artifact@v4
         if: always()
