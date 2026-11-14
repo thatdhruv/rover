@@ -10,8 +10,9 @@ ${BAD_UPDATE}     ${CURDIR}/../../build/bad_update.hex
 
 *** Keywords ***
 Boot Rover
+    Execute Command    $platform=@${CURDIR}/rover_platform.repl
     Execute Command    $mcuboot=@${BUILD}/mcuboot/zephyr/zephyr.hex
-    Execute Command    $app=@${BUILD}/app/zephyr/zephyr.signed.hex
+    Execute Command    $app=@${BUILD}/app/zephyr/zephyr.signed.confirmed.hex
     Execute Command    include @${CURDIR}/rover.resc
     Create Terminal Tester    sysbus.usart3    timeout=30
 
@@ -33,8 +34,9 @@ Bad Update Rolls Back Automatically
     [Documentation]    A hung update is staged in slot 1. MCUboot swaps it in and boots it; it hangs
     ...                before being confirmed, the watchdog resets the chip, and MCUboot must swap
     ...                the previous (good) image back, which then runs and confirms itself.
+    Execute Command    $platform=@${CURDIR}/rover_platform.repl
     Execute Command    $mcuboot=@${BUILD}/mcuboot/zephyr/zephyr.hex
-    Execute Command    $app=@${BUILD}/app/zephyr/zephyr.signed.hex
+    Execute Command    $app=@${BUILD}/app/zephyr/zephyr.signed.confirmed.hex
     Execute Command    include @${CURDIR}/rover.resc
     Execute Command    sysbus LoadHEX @${BAD_UPDATE}
     Create Terminal Tester    sysbus.usart3    timeout=60

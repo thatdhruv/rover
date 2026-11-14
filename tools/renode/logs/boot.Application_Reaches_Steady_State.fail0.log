@@ -1,3 +1,0 @@
-01:25:28.3836 [INFO] Including script(s): /work/tools/renode/rover.resc
-01:25:28.3859 [INFO] System bus created.
-01:25:28.6065 [INFO] sysbus: Loaded SVD: /tmp/renode-26/ae0d2cf9-5e33-482a-abd6-2e2348aac0a0.tmp. Name: STM32F429x. Description: STM32F429x.

@@ -1,7 +1,0 @@
-01:25:25.0920 [INFO] Including script(s): /work/tools/renode/rover.resc
-01:25:25.1153 [INFO] System bus created.
-01:25:25.7344 [INFO] Downloading https://dl.antmicro.com/projects/renode/svd/STM32F429x.svd.gz.
-01:25:27.2529 [INFO] Download done.
-01:25:27.2534 [INFO] Decompressing file
-01:25:27.2599 [INFO] Decompression done
-01:25:27.4989 [INFO] sysbus: Loaded SVD: /tmp/renode-26/4281c4b9-ce10-44eb-a031-58014ce7f125.tmp. Name: STM32F429x. Description: STM32F429x.

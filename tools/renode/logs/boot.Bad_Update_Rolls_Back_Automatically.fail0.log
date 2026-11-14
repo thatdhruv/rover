@@ -1,2 +1,59 @@
-01:25:28.9086 [INFO] System bus created.
-01:25:29.0873 [INFO] sysbus: Loaded SVD: /tmp/renode-26/bc3a2e56-355b-418e-b68b-e16058b42c0d.tmp. Name: STM32F429x. Description: STM32F429x.
+02:15:04.9389 [INFO] Including script(s): /work/tools/renode/rover.resc
+02:15:04.9414 [INFO] System bus created.
+02:15:05.1692 [INFO] sysbus: Loaded SVD: /tmp/renode-26/ec921d98-7068-474e-b95e-d4187bea4403.tmp. Name: STM32F40x. Description: STM32F40x.
+02:15:05.1876 [INFO] sysbus: Loading block of 27364 bytes length at 0x8000000.
+02:15:05.2250 [INFO] sysbus: Loading block of 113174 bytes length at 0x8020000.
+02:15:05.2263 [INFO] sysbus: Loading block of 24 bytes length at 0x805FFE8.
+02:15:05.2777 [INFO] sysbus: Loading block of 113194 bytes length at 0x8060000.
+02:15:05.2781 [INFO] sysbus: Loading block of 16 bytes length at 0x809FFF0.
+02:15:05.2985 [INFO] rover: Machine started.
+02:15:05.3031 [WARNING] nvic: Unhandled write to offset 0xD2C. Unhandled bits: [0-31] when writing value 0xFFFFFFFF. Tags: RESERVED (0x1), VECTTBL (0x1), RESERVED (0xFFFFFFF), FORCED (0x1), DEBUGEVT (0x1).
+02:15:05.3057 [WARNING] flash_controller: Unhandled write to offset 0x0. Unhandled bits: [8] when writing value 0x100. Tags: PRFTEN (0x1).
+02:15:05.3058 [WARNING] flash_controller: Unhandled write to offset 0x0. Unhandled bits: [9] when writing value 0x200. Tags: ICEN (0x1).
+02:15:05.3058 [WARNING] flash_controller: Unhandled write to offset 0x0. Unhandled bits: [10] when writing value 0x400. Tags: DCEN (0x1).
+02:15:05.3060 [WARNING] rcc: Unhandled write to offset 0x0. Unhandled bits: [18] when writing value 0x40483. Tags: HSEBYP (0x1).
+02:15:05.3062 [WARNING] sysbus: [cpu: 0x8000552] ReadDoubleWord from an unimplemented register DBG:DBGMCU_CR (0xE0042004), returning a value from SVD: 0x0
+02:15:05.3062 [WARNING] sysbus: [cpu: 0x8000558] WriteDoubleWord of value 0x0 to an unimplemented register DBG:DBGMCU_CR (0xE0042004) generated from SVD
+02:15:05.3076 [INFO] usart3: [host: 64.39ms (+64.39ms)|virt: 0.24ms (+0.24ms)] *** Booting MCUboot ee39e2d694bd ***
+02:15:05.3078 [INFO] usart3: [host:   64.59ms (+0.2ms)|virt:     0.24ms (+0s)] *** Using Zephyr OS build 684c9e8f32e4 ***
+02:15:05.5329 [WARNING] nvic: Unhandled write to offset 0xD2C. Unhandled bits: [0-31] when writing value 0xFFFFFFFF. Tags: RESERVED (0x1), VECTTBL (0x1), RESERVED (0xFFFFFFF), FORCED (0x1), DEBUGEVT (0x1).
+02:15:05.5334 [WARNING] flash_controller: Unhandled write to offset 0x0. Unhandled bits: [8] when writing value 0x105. Tags: PRFTEN (0x1).
+02:15:05.5334 [WARNING] flash_controller: Unhandled write to offset 0x0. Unhandled bits: [9] when writing value 0x205. Tags: ICEN (0x1).
+02:15:05.5334 [WARNING] flash_controller: Unhandled write to offset 0x0. Unhandled bits: [10] when writing value 0x405. Tags: DCEN (0x1).
+02:15:05.5336 [WARNING] rcc: Unhandled write to offset 0x0. Unhandled bits: [18] when writing value 0x3070483. Tags: HSEBYP (0x1).
+02:15:05.5339 [WARNING] sysbus: [cpu: 0x8023796] ReadDoubleWord from an unimplemented register DBG:DBGMCU_CR (0xE0042004), returning a value from SVD: 0x0
+02:15:05.5339 [WARNING] sysbus: [cpu: 0x802379C] WriteDoubleWord of value 0x0 to an unimplemented register DBG:DBGMCU_CR (0xE0042004) generated from SVD
+02:15:05.5369 [WARNING] sysbus: [cpu: 0x80290F0] ReadDoubleWord from an unimplemented register C_ADC:CCR (0x40012304), returning a value from SVD: 0x0
+02:15:05.5369 [WARNING] sysbus: [cpu: 0x80290F8] WriteDoubleWord of value 0x0 to an unimplemented register C_ADC:CCR (0x40012304) generated from SVD
+02:15:05.5371 [WARNING] sysbus: [cpu: 0x8029150] ReadDoubleWord from an unimplemented register ADC1:CR2 (0x40012008), returning a value from SVD: 0x0
+02:15:05.5378 [WARNING] sysbus: [cpu: 0x8032F92] ReadDoubleWord from an unimplemented register SYSCFG:EXTICR1 (0x40013808), returning a value from SVD: 0x0
+02:15:05.5378 [WARNING] sysbus: [cpu: 0x8032FA4] WriteDoubleWord of value 0x400 to an unimplemented register SYSCFG:EXTICR1 (0x40013808) generated from SVD
+02:15:05.5380 [WARNING] sysbus: [cpu: 0x8032F92] ReadDoubleWord from an unimplemented register SYSCFG:EXTICR1 (0x40013808), returning a value from SVD: 0x0
+02:15:05.5380 [WARNING] sysbus: [cpu: 0x8032FA4] WriteDoubleWord of value 0x4000 to an unimplemented register SYSCFG:EXTICR1 (0x40013808) generated from SVD
+02:15:05.5381 [WARNING] sysbus: [cpu: 0x8032F92] ReadDoubleWord from an unimplemented register SYSCFG:EXTICR2 (0x4001380C), returning a value from SVD: 0x0
+02:15:05.5381 [WARNING] sysbus: [cpu: 0x8032FA4] WriteDoubleWord of value 0x4 to an unimplemented register SYSCFG:EXTICR2 (0x4001380C) generated from SVD
+02:15:05.5381 [WARNING] sysbus: [cpu: 0x8032F92] ReadDoubleWord from an unimplemented register SYSCFG:EXTICR2 (0x4001380C), returning a value from SVD: 0x0
+02:15:05.5381 [WARNING] sysbus: [cpu: 0x8032FA4] WriteDoubleWord of value 0x40 to an unimplemented register SYSCFG:EXTICR2 (0x4001380C) generated from SVD
+02:15:05.5397 [WARNING] timer3: Unhandled write to offset 0x18. Unhandled bits: [3] when writing value 0x68. Tags: OC1PE (0x1).
+02:15:05.5400 [WARNING] timer3: Unhandled write to offset 0x18. Unhandled bits: [11] when writing value 0x6860. Tags: OC2PE (0x1).
+02:15:05.5402 [WARNING] gpioPortB: Unhandled write to offset 0x4. Unhandled bits: [8] when writing value 0x100. Tags: OT8 (0x1).
+02:15:05.5402 [WARNING] gpioPortB: Unhandled write to offset 0x4. Unhandled bits: [9] when writing value 0x200. Tags: OT9 (0x1).
+02:15:05.5406 [WARNING] gpioPortB: Unhandled write to offset 0x4. Unhandled bits: [10] when writing value 0x400. Tags: OT10 (0x1).
+02:15:05.5406 [WARNING] gpioPortB: Unhandled write to offset 0x4. Unhandled bits: [11] when writing value 0x800. Tags: OT11 (0x1).
+02:15:05.5409 [WARNING] timer1: Unhandled write to offset 0x44. Unhandled bits: [15] when writing value 0x8000. Tags: Main Output Enable (MOE) (0x1).
+02:15:05.5429 [WARNING] i2c1: Tried to read from an empty fifo
+02:15:06.0372 [WARNING] rcc: Unhandled write to offset 0x74. Unhandled bits: [24] when writing value 0xF000003. Tags: RMVF (0x1).
+02:15:06.0372 [WARNING] pwr: Unhandled write to offset 0x0. Unhandled bits: [3] when writing value 0xFCC08. Tags: CSBF (0x1).
+02:15:06.0381 [WARNING] flash_controller: Unhandled write to offset 0x10. Unhandled bits: [0] when writing value 0x1. Tags: PG (0x1).
+02:15:06.0408 [WARNING] flash_controller: Unhandled write to offset 0x10. Unhandled bits: [0] when writing value 0x1. Tags: PG (0x1). (63)
+02:15:06.0408 [WARNING] sysbus: [cpu: 0x802B1BC] ReadDoubleWord from an unimplemented register DBG:DBGMCU_APB1_FZ (0xE0042008), returning a value from SVD: 0x0
+02:15:06.0408 [WARNING] sysbus: [cpu: 0x802B1C2] WriteDoubleWord of value 0x1000 to an unimplemented register DBG:DBGMCU_APB1_FZ (0xE0042008) generated from SVD
+02:15:06.0426 [INFO] usart3: [host:      0.8s (+0.73s)|virt:   0.73s (+0.73s)] [m
+02:15:06.0464 [INFO] usart3: [host:     0.8s (+3.73ms)|virt:  0.73s (+0.34ms)] [1;32muart:~$ [m[8D[J[00:00:00.500,000] [1;31m<err> rover_mpu6050: WHO_AM_I read failed (-5)[0m
+02:15:06.0474 [INFO] usart3: [host:     0.8s (+1.01ms)|virt:  0.73s (+0.18ms)] [1;32muart:~$ [m[8D[J*** Booting Zephyr OS build 684c9e8f32e4 ***
+02:15:06.0488 [INFO] usart3: [host:    0.81s (+1.41ms)|virt:  0.73s (+0.28ms)] [1;32muart:~$ [m[8D[J[00:00:00.500,000] [0m<inf> rover: rover firmware starting[0m
+02:15:06.0500 [INFO] usart3: [host:    0.81s (+1.26ms)|virt:  0.73s (+0.28ms)] [1;32muart:~$ [m[8D[J[00:00:00.500,000] [1;33m<wrn> imu_task: IMU not ready; continuing without it[0m
+02:15:06.0510 [INFO] usart3: [host:    0.81s (+0.98ms)|virt:  0.73s (+0.24ms)] [1;32muart:~$ [m[8D[J[00:00:00.508,000] [0m<inf> rover: rover firmware running[0m
+02:15:10.8102 [INFO] usart3: [host:     5.57s (+4.76s)|virt:   4.75s (+4.01s)] [1;32muart:~$ [m[8D[J[1;32muart:~$ [m[8D[J[00:00:03.523,000] [0m<inf> safety: image confirmed[0m
+02:16:15.3861 [INFO] rover: Machine paused.
+02:16:15.9861 [INFO] rover: Machine resumed.

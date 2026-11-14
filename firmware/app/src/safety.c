@@ -172,8 +172,15 @@ static void supervisor_fn(void *a, void *b, void *c)
 		 */
 		if (!confirmed && now - healthy_since >= CONFIG_ROVER_CONFIRM_AFTER_MS) {
 			confirmed = true;
-			if (!boot_is_img_confirmed() && boot_write_img_confirmed() == 0) {
+			int rc = 0;
+
+			if (!boot_is_img_confirmed()) {
+				rc = boot_write_img_confirmed();
+			}
+			if (rc == 0) {
 				LOG_INF("image confirmed");
+			} else {
+				LOG_ERR("could not confirm image (%d); MCUboot will revert on reset", rc);
 			}
 		}
 #endif
