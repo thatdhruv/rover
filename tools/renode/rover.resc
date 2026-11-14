@@ -1,17 +1,26 @@
 # NUCLEO-F429ZI under Renode: MCUboot + signed rover app.
-# Set before including: $mcuboot=@.../mcuboot/zephyr/zephyr.hex  $app=@.../app/zephyr/zephyr.signed.confirmed.hex  $platform=@.../rover_platform.repl
+# Set before including: $erased=@.../erased_flash.bin $mcuboot=@.../mcuboot/zephyr/zephyr.hex  $app=@.../app/zephyr/zephyr.signed.confirmed.hex  $platform=@.../rover_platform.repl
 using sysbus
 $name?="rover"
 mach create $name
 
 machine LoadPlatformDescription $platform
 
+# Real flash reads 0xFF when erased; Renode's memory starts at 0x00, which MCUboot reads as corrupt
+# trailers. Pre-fill it ($erased is a 0xFF file the test creates), then load the images on top.
+sysbus LoadBinary $erased 0x08000000
 sysbus LoadHEX $mcuboot
 sysbus LoadHEX $app
 showAnalyzer sysbus.usart3
 
 # On real hardware flash is aliased at 0x0 for boot; Renode's model is not. Point the vector table
-# at flash and load MCUboot's initial SP and PC by hand.
-cpu VectorTableOffset 0x08000000
-cpu SP `sysbus ReadDoubleWord 0x08000000`
-cpu PC `sysbus ReadDoubleWord 0x08000004`
+# at flash and load MCUboot's initial SP and PC by hand. As a `reset` macro it also runs on every
+# later reset (watchdog, MCUboot swap restarts), which is what the rollback test relies on. Flash
+# contents survive a reset.
+macro reset
+"""
+    cpu VectorTableOffset 0x08000000
+    cpu SP `sysbus ReadDoubleWord 0x08000000`
+    cpu PC `sysbus ReadDoubleWord 0x08000004`
+"""
+runMacro $reset

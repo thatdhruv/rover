@@ -7,6 +7,7 @@
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/sys/printk.h>
 
 #include "rover_state.h"
 
@@ -17,6 +18,9 @@ static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios);
 int main(void)
 {
 	LOG_INF("rover firmware starting");
+	if (IS_ENABLED(CONFIG_ROVER_TEST_BAD_IMAGE)) {
+		LOG_WRN("TEST IMAGE: this build hangs one second after start");
+	}
 	if (gpio_is_ready_dt(&led)) {
 		gpio_pin_configure_dt(&led, GPIO_OUTPUT_INACTIVE);
 	}
@@ -36,7 +40,8 @@ int main(void)
 
 	if (IS_ENABLED(CONFIG_ROVER_TEST_BAD_IMAGE)) {
 		k_msleep(1000);
-		LOG_ERR("test: simulating a hung image");
+		/* printk, not LOG: deferred logging would be lost when interrupts go off below */
+		printk("test: simulating a hung image\n");
 		(void)irq_lock();
 		for (;;) {
 		}

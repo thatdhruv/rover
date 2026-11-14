@@ -5,7 +5,7 @@
 //     Zephyr's kernel clock to a fraction of real time
 //   * USART6 (the rover's host-link UART) is added; without it the UART driver polls a register stub
 //     forever during init
-//   * the F429 external memory bank is included
+//   * the F429 external memory bank is included and flash is 2 MB (the F4 base model has 1 MB)
 fsmcBank1: Memory.MappedMemory @ sysbus 0x60000000
     size: 0x10000000
 
